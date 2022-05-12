@@ -65,5 +65,3 @@ app.get('/ability/:name', (req, res) => {
         res.send(body);
     })
 })
-
-app.get("/ability/:")
