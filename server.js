@@ -41,14 +41,10 @@ app.listen(process.env.PORT || 5005, err => {
 })
 
 app.get('/', (req, res) => {
-    pokemonModel.find({ name: "bulbasaur" }, (err, pokemon) => {
-        if (err) throw err;
-        console.log(pokemon)
-        res.send(pokemon)
-    })
+    res.redirect('/index.html');
 })
 
-app.get("/pokemon/:id", (req, res) => {
+app.get('/pokemon/:id', (req, res) => {
     pokemonModel.find({
         id: req.params.id}, (err, body) => {
             if (err) throw err;
@@ -56,11 +52,18 @@ app.get("/pokemon/:id", (req, res) => {
     })
 })
 
-app.get("/pokemon/:name", (req, res) => {
+app.get('/pokemon/:name', (req, res) => {
     pokemonModel.find(({ name: req.params.name} , (err,body) => {
         if (err) throw err;
         res.send(body);
     }))
+})
+
+app.get('/ability/:name', (req, res) => {
+    typeModel.find({ name:req.params.name}, (err,body) => {
+        if (err) throw err;
+        res.send(body);
+    })
 })
 
 app.get("/ability/:")
