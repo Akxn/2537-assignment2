@@ -35,7 +35,7 @@ const typeSchema = new mongoose.Schema({
     pokemon: [Object],
 }, { collection: 'ability' });
 
-const eventSchema = new mongoose.Schema({
+const timelineSchema = new mongoose.Schema({
     text: String,
     hits: Number,
     time: String,
@@ -43,7 +43,7 @@ const eventSchema = new mongoose.Schema({
 
 const pokemonModel = mongoose.model('pokemon', pokemonSchema);
 const typeModel = mongoose.model('ability', typeSchema);
-const eventModel = mongoose.model("timeline", eventSchema);
+const timelineModel = mongoose.model("timelines", timelineSchema);
 
 app.use(bodyparser.urlencoded({ extended: true }))
 app.use(express.static("public"))
@@ -86,11 +86,11 @@ app.use(express.static("public"))
 app.get('/profile/:id', function (req, res) {
     // console.log(req);
 
-    const url = `http://localhost:5000/pokemon/${req.params.id}`
-
+    // const url = `http://localhost:5000/pokemon/${req.params.id}`
+    const url = `https://pokeapi.co/api/v2/pokemon/${req.params.id}`
 
     data = " "
-    http.get(url, function (https_res) {
+    https.get(url, function (https_res) {
         https_res.on("data", function (chunk) {
             data += chunk
         })
@@ -165,8 +165,64 @@ app.get('/ability/:name', (req, res) => {
     })
 })
 
-app.get("/timeline/remove/:id", function (req, res) {
-    eventModel
+app.get('/timeline/getAllEvents', function (req, res) {
+    timelineModel.find({}, function (err, data) {
+        if (err) {
+            console.log("Error " + err);
+        } else {
+            console.log("Data " + data);
+        }
+        res.send(data);
+    });
 })
+
+app.put('/timeline/insert', function (req, res) {
+    console.log(req.body)
+    timelineModel.create({
+        'text': req.body.text,
+        'time': req.body.time,
+        'hits': req.body.hits
+    }, function (err, data) {
+        if (err) {
+            console.log("Error " + err);
+        } else {
+            console.log("Data " + data);
+        }
+        res.send("Insertion is successful!");
+    });
+})
+
+app.get("/timeline/remove/:id", function (req, res) {
+    timelineModel.deleteOne(
+      {
+        _id: req.params.id,
+      },
+      function (err, data) {
+        if (err) {
+          console.log("Error " + err);
+        } else {
+          console.log("Deleted: \n" + data);
+        }
+        res.send("Delete is good!");
+      }
+    );
+  });
+
+  app.get("/timeline/removeAll", function (req, res) {
+    timeline.deleteMany(
+      {
+        _hits: { $gt: 0 },
+      },
+      function (err, data) {
+        if (err) {
+          console.log("Error " + err);
+        } else {
+          console.log("Deleted all");
+        }
+        res.send("Deleted all!");
+      }
+    );
+  });
+
 
 app.use(express.static('./public'));
