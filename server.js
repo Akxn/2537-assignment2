@@ -170,7 +170,7 @@ app.get('/timeline/getAllEvents', function (req, res) {
         if (err) {
             console.log("Error " + err);
         } else {
-            console.log("Data " + data);
+            // console.log("Data " + data);
         }
         res.send(data);
     });

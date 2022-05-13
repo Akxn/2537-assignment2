@@ -3,7 +3,7 @@ const dburl = "http://localhost:5001";
 function laodEvents() {
     $('#events').empty();
     $.ajax({
-        url: "http://localhost:5000/timeline/getAllEvents",
+        url: "http://localhost:5001/timeline/getAllEvents",
         type: "get",
         sucess: (r) => {
             for(i = 0; i< r.length; i ++){
