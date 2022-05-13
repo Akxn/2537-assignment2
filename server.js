@@ -4,13 +4,12 @@ app.set('view engine', 'ejs');
 const https = require('https');
 const mongoose = require('mongoose');
 const bodyparser = require('body-parser');
-
-
+const http = require('http');
 
 mongoose.connect("mongodb+srv://akamizuna:Mizuna1992@cluster0.bfw2e.mongodb.net/2537?retryWrites=true&w=majority", {
-        useNewUrlParser: true,
-        useUnifiedTopology: true
-    }
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+}
 );
 
 const PORT = process.env.PORT || 5000;
@@ -18,7 +17,7 @@ app.listen(PORT, () => {
     console.log("Listening", process.env.PORT || 5000);
 })
 
-pokemonurl = "http://localhost:5001/";
+pokemonurl = "http://localhost:5000/";
 
 const pokemonSchema = new mongoose.Schema({
     id: Number,
@@ -30,11 +29,11 @@ const pokemonSchema = new mongoose.Schema({
     weight: Number
 }, { collection: 'pokemon' });
 
-const typeSchema = new mongoose.Schema ({
+const typeSchema = new mongoose.Schema({
     name: String,
     id: Number,
     pokemon: [Object],
-}, { collection: 'ability'});
+}, { collection: 'ability' });
 
 const eventSchema = new mongoose.Schema({
     text: String,
@@ -49,30 +48,101 @@ const eventModel = mongoose.model("timeline", eventSchema);
 app.use(bodyparser.urlencoded({ extended: true }))
 app.use(express.static("public"))
 
-app.get("/profile/:id", function (req, res) {
-    const url = pokeapiUrl + `pokemon/${req.params.id}`;
-    data = "";
+// app.get("/profile/:id", function (req, res) {
+//     const url = pokemonurl + `pokemon/${req.params.id}`;
+//     data = "";
 
+//     http.get(url, function (https_res) {
+//       https_res.on("data", function (chunk) {
+//         data += chunk;
+//       });
+//       https_res.on("end", function () {
+//         res.render("profile.ejs", getPokemonData(data));
+//       });
+//     });
+//   });
+
+
+// function getPokemonData(data) {
+//     data = JSON.parse(data);
+//     console.log(data.name);
+//     stats = Object.assign(
+//         {},
+//         { base_xp: data.base_experience }, data.stats.map((stats) => ({
+//             [stats.stat.name]: stat.base_stat,
+//         }))
+//     );
+//     abilities = data.abilities.map((ability) => {
+//         return ability.ability.name;
+//     });
+//     pokemonData = {
+//         name: data.name[0].toUpperCase() + data.name.slice(1),
+//         img: data.sprites.other["official-artwork"].front_default,
+//         stats: stats,
+//     };
+//     return pokemonData;
+// }
+
+app.get('/profile/:id', function (req, res) {
+    // console.log(req);
+
+    const url = `http://localhost:5000/pokemon/${req.params.id}`
+
+
+    data = " "
     http.get(url, function (https_res) {
-      https_res.on("data", function (chunk) {
-        data += chunk;
-      });
-      https_res.on("end", function () {
-        res.render("profile.ejs", getPokemonData(data));
-      });
+        https_res.on("data", function (chunk) {
+            data += chunk
+        })
+
+        https_res.on("end", function () {
+            data = JSON.parse(data)
+
+            tmp = data.stats.filter((obj_) => {
+                return obj_.stat.name == "hp"
+            }).map(
+                (obj_2) => {
+                    return obj_2.base_stat
+                }
+            )
+
+            attack = data.stats.filter((obj_) => {
+                return obj_.stat.name == "attack"
+            }).map((obj2) => {
+                return obj2.base_stat
+            })
+
+            defense = data.stats.filter((obj_) => {
+                return obj_.stat.name == "defense"
+            }).map((obj2)=>{
+                return obj2.base_stat
+            })
+
+            special_attack = data.stats.filter((obj_) => {
+                return obj_.stat.name == "special-attack"
+            }).map((obj2)=>{
+                return obj2.base_stat
+            })
+
+            speed = data.stats.filter((obj_) => {
+                return obj_.stat.name == "speed"
+            }).map((obj2)=>{
+                return obj2.base_stat
+            })
+
+            res.render("profile.ejs", {
+                "id": req.params.id,
+                "name": data.name,
+                "hp": tmp[0],
+                "attack": attack,
+                "defense": defense,
+                "special_attack": special_attack,
+                "speed": speed,
+            });
+        })
     });
-  });
 
-
-function getPokemonData (data) {
-    data = JSON.parse(data);
-    pokemonData = {
-        name: data.name[0],
-        img: data.sprites.other["official-artwork"].front_default,
-        stats:stats,
-    };
-    return pokemonData;
-}
+})
 
 
 app.get('/', (req, res) => {
@@ -80,21 +150,23 @@ app.get('/', (req, res) => {
 })
 
 app.get('/pokemon/:name', (req, res) => {
-    let queryobject = isNaN(req.params.name) ? {name: req.params.name} : {id: req.params.name};
-    pokemonModel.find(queryobject, (err, body) => {
-            if (err) throw err;
-            res.send(body);
-    })
-})
-
-
-app.get('/ability/:name', (req, res) => {
-    typeModel.find({ name:req.params.name}, (err,body) => {
+    let query = isNaN(req.params.name) ? { name: req.params.name } : { id: req.params.name };
+    pokemonModel.find(query, (err, body) => {
         if (err) throw err;
         res.send(body);
     })
 })
 
-app.get("/timeline/remove/:id", function (req,res) {
+
+app.get('/ability/:name', (req, res) => {
+    typeModel.find({ name: req.params.name }, (err, body) => {
+        if (err) throw err;
+        res.send(body);
+    })
+})
+
+app.get("/timeline/remove/:id", function (req, res) {
     eventModel
 })
+
+app.use(express.static('./public'));

@@ -40,7 +40,7 @@ function searchPokemonName() {
     searchreq = $("#pokemonName").val().toLowerCase()
     $.ajax({
         type: "get",
-        url: `https://pokeapi.co/api/v2/pokemon/${searchreq}`,
+        url: `http://localhost:5000/pokemon/${searchreq}`,
         success: singlePokemon
     })
     $("main").empty()
@@ -111,7 +111,7 @@ function displayRegion(start, end) {
     $("main").empty()
     $.ajax({
         type: "get",
-        url: `https://pokeapi.co/api/v2/pokemon/?limit=${end}&offset=${start}`,
+        url: `https://localhost:5000/pokemon/?limit=${end}&offset=${start}`,
         success: processPokeRegion
     })
 }

@@ -16,6 +16,7 @@ const cardColors = {
     normal: '#F5F5F5'
 };
 const main_types = Object.keys(cardColors)
+// "http://localhost:5000"
 
 function processPokemonResponse(data) {
     // console.log(data)
@@ -36,7 +37,7 @@ async function loadNineImages() {
             to_add += `<div class="images_group">`
         }
 
-        x = Math.floor(Math.random() * 898) + 1
+        x = Math.floor(Math.random() * 30) + 1
         await $.ajax({
             type: "GET",
             url: `https://pokeapi.co/api/v2/pokemon/${x}/`,
