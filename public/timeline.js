@@ -3,7 +3,7 @@ const dburl = "http://localhost:5001";
 function laodEvents() {
     $('#events').empty();
     $.ajax({
-        url: dburl + "timeline/getAllEvents",
+        url: "http://localhost:5000/timeline/getAllEvents",
         type: "get",
         sucess: (r) => {
             for(i = 0; i< r.length; i ++){
@@ -25,16 +25,16 @@ function laodEvents() {
 
 var time = new Date();
 
-function profilechecked(data) {
+function profilechecked(pokemonName) {
     $.ajax({
         url: `/timeline/insert`,
-        type: "put",
+        type: "POST",
         data: {
-            text: `${data.name} viewed`,
+            text: `${pokemonName} viewed`,
             time: time.toLocaleTimeStringm
          },
          sucess: (data) => {
-             laodEvents;
+             laodEvents();
          }
     })
 }

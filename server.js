@@ -176,7 +176,7 @@ app.get('/timeline/getAllEvents', function (req, res) {
     });
 })
 
-app.put('/timeline/insert', function (req, res) {
+app.post('/timeline/insert', function (req, res) {
     console.log(req.body)
     timelineModel.create({
         'text': req.body.text,
