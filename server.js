@@ -90,7 +90,7 @@ app.get('/profile/:id', function (req, res) {
     // const url = `https://pokeapi.co/api/v2/pokemon/${req.params.id}`
 
     data = " "
-    https.get(url, function (https_res) {
+    http.get(url, function (https_res) {
         https_res.on("data", function (chunk) {
             data += chunk
         })
@@ -98,34 +98,34 @@ app.get('/profile/:id', function (req, res) {
         https_res.on("end", function () {
             data = JSON.parse(data)
 
-            tmp = data.stats.filter((obj_) => {
-                return obj_.stat.name == "hp"
+            tmp = data.filter((obj_) => {
+                return obj_.name == "hp"
             }).map(
                 (obj_2) => {
                     return obj_2.base_stat
                 }
             )
 
-            attack = data.stats.filter((obj_) => {
-                return obj_.stat.name == "attack"
+            attack = data.filter((obj_) => {
+                return obj_.name == "attack"
             }).map((obj2) => {
                 return obj2.base_stat
             })
 
-            defense = data.stats.filter((obj_) => {
-                return obj_.stat.name == "defense"
+            defense = data.filter((obj_) => {
+                return obj_.name == "defense"
             }).map((obj2)=>{
                 return obj2.base_stat
             })
 
-            special_attack = data.stats.filter((obj_) => {
-                return obj_.stat.name == "special-attack"
+            special_attack = data.filter((obj_) => {
+                return obj_.name == "special-attack"
             }).map((obj2)=>{
                 return obj2.base_stat
             })
 
-            speed = data.stats.filter((obj_) => {
-                return obj_.stat.name == "speed"
+            speed = data.filter((obj_) => {
+                return obj_.name == "speed"
             }).map((obj2)=>{
                 return obj2.base_stat
             })
@@ -223,6 +223,25 @@ app.get("/timeline/remove/:id", function (req, res) {
       }
     );
   });
+
+  app.get("/timeline/like/:id", function (req,res) {
+      timelineModel.updateOne(
+          {
+              _id: req.params.id,
+          }, {
+            $inc: {hits:1},
+          },
+          function (err, data)
+          {
+            if (err) {
+              console.log("Error " + err);
+            } else {
+              console.log("Liked: \n" + data);
+            }
+            res.send("Update is good!");
+          }
+      )
+  })
 
 
 app.use(express.static('./public'));

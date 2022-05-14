@@ -12,9 +12,10 @@ function loadEvents() {
                     `
                     <div class="event" id="${id}>
                     <span class="eventtime">${r[i].time}<span>
-                    <span class="counter">${r[i].hits}<span>
                     <span>${r[i].text}<span>
-                    <button class="deletebutton" onclick=deleteEvent('${id}')<button>
+                    <button class="like-button" onclick="likeEvent('${id}')">Like</button>
+                    <span class="counter">${r[i].hits}<span></span>
+                    <button class="deletebutton" onclick=deleteEvent('${id}')>Delete</button>
                     </div>
                     `
                 )
@@ -60,6 +61,17 @@ function clearEvents() {
         }
     })
 }
+
+function likeEvent(id) {
+    $.ajax({
+      url: `/timeline/like/${id}`,
+      type: "GET",
+      success: () => {
+        loadEvents();
+      },
+    });
+  }
+
 
 function setup() {
     loadEvents();
