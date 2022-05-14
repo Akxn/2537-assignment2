@@ -23,7 +23,7 @@ function processPokemonResponse(data) {
     const pokemon_types = data.types.map(type => type.type.name);
     const type = main_types.find(type => pokemon_types.indexOf(type) > -1);
     const colour = cardColors[type];
-    to_add += `<div class="image_container" style = "background-color: ${colour}">
+    to_add += `<div class="image_container" style = "background-color: ${colour}" onclick="profilechecked('${data.name}')">
     <a href= "/profile/${data.id}">
     <img src="${data.sprites.other["official-artwork"].front_default}"> </a>
     <div> ${data.name} </div>

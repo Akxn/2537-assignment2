@@ -172,12 +172,12 @@ app.get('/timeline/getAllEvents', function (req, res) {
         } else {
             // console.log("Data " + data);
         }
+        console.log(data);
         res.send(data);
     });
 })
 
 app.post('/timeline/insert', function (req, res) {
-    console.log(req.body)
     timelineModel.create({
         'text': req.body.text,
         'time': req.body.time,

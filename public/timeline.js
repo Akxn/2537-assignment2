@@ -1,17 +1,17 @@
-const dburl = "http://localhost:5001";
 
-function laodEvents() {
+function loadEvents() {
     $('#events').empty();
     $.ajax({
-        url: "http://localhost:5001/timeline/getAllEvents",
+        url: "http://localhost:5000/timeline/getAllEvents",
         type: "get",
-        sucess: (r) => {
-            for(i = 0; i< r.length; i ++){
+        success: (r) => {
+            for(i = 0; i < r.length; i ++){
+                console.log(r[i].text);
                 let id = r[i]["_id"];
                 $('#events').append(
                     `
                     <div class="event" id="${id}>
-                    ${r[i].ext}
+                    <span>${r[i].text}<span>
                     <span class="eventtime">${r[i].time}<span>
                     <span class="counter">${r[i].hits}<span>
                     <button class="deletebutton" onclick=deleteEvent('${id}')<button>
@@ -31,10 +31,12 @@ function profilechecked(pokemonName) {
         type: "POST",
         data: {
             text: `${pokemonName} viewed`,
-            time: time.toLocaleTimeStringm
+            time: time.toLocaleTimeString(),
+            hits: 1
          },
-         sucess: (data) => {
-             laodEvents();
+         success: (data) => {
+            // console.log(data);
+            loadEvents();
          }
     })
 }
@@ -43,13 +45,13 @@ function deleteEvent() {
     $.ajax({
         url: `/timeline/remove/${id}`,
         type: "GET",
-        sucess: ()=> {
-            laodEvents();
+        success: ()=> {
+            loadEvents();
         }
     })
 }
 
 function setup() {
-    laodEvents();
+    loadEvents();
 }
 $(document).ready(setup);
