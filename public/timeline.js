@@ -11,9 +11,9 @@ function loadEvents() {
                 $('#events').append(
                     `
                     <div class="event" id="${id}>
-                    <span>${r[i].text}<span>
                     <span class="eventtime">${r[i].time}<span>
                     <span class="counter">${r[i].hits}<span>
+                    <span>${r[i].text}<span>
                     <button class="deletebutton" onclick=deleteEvent('${id}')<button>
                     </div>
                     `
@@ -41,11 +41,21 @@ function profilechecked(pokemonName) {
     })
 }
 
-function deleteEvent() {
+function deleteEvent(id) {
     $.ajax({
         url: `/timeline/remove/${id}`,
         type: "GET",
         success: ()=> {
+            loadEvents();
+        }
+    })
+}
+
+function clearEvents() {
+    $.ajax({
+        url: `/timeline/removeAll`,
+        type: "GET",
+        success: () => {
             loadEvents();
         }
     })

@@ -86,8 +86,8 @@ app.use(express.static("public"))
 app.get('/profile/:id', function (req, res) {
     // console.log(req);
 
-    // const url = `http://localhost:5000/pokemon/${req.params.id}`
-    const url = `https://pokeapi.co/api/v2/pokemon/${req.params.id}`
+    const url = `http://localhost:5000/pokemon/${req.params.id}`
+    // const url = `https://pokeapi.co/api/v2/pokemon/${req.params.id}`
 
     data = " "
     https.get(url, function (https_res) {
@@ -209,9 +209,9 @@ app.get("/timeline/remove/:id", function (req, res) {
   });
 
   app.get("/timeline/removeAll", function (req, res) {
-    timeline.deleteMany(
+    timelineModel.deleteMany(
       {
-        _hits: { $gt: 0 },
+        hits: { $gt: 0 },
       },
       function (err, data) {
         if (err) {
